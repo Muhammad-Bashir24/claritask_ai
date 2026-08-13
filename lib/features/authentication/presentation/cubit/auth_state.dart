@@ -12,7 +12,8 @@ final class AuthInitial extends AuthState {}
 final class AuthLoading extends AuthState {}
 
 final class AuthAuthenticated extends AuthState {
-  final dynamic user; // Using dynamic or importing UserEntity. Let's import UserEntity in the cubit.
+  final dynamic
+  user; // Using dynamic or importing UserEntity. Let's import UserEntity in the cubit.
 
   const AuthAuthenticated(this.user);
 

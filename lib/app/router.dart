@@ -4,8 +4,12 @@ import 'package:claritask_ai/features/authentication/presentation/screens/signup
 import 'package:claritask_ai/features/authentication/presentation/screens/update_password_screen.dart';
 import 'package:claritask_ai/features/home/presentation/screens/home_screen.dart';
 import 'package:claritask_ai/features/marketing_onbaording/presentation/screens/marketing_onboarding_sreens.dart';
+import 'package:claritask_ai/features/personalization/presentation/cubit/personalization_cubit.dart';
+import 'package:claritask_ai/features/personalization/presentation/pages/personalization_page.dart';
 import 'package:claritask_ai/features/splash/presentation/screens/splash_screen.dart';
+import 'package:claritask_ai/core/di/injection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
 
@@ -61,6 +65,14 @@ class AppRouter {
           path: '/home',
           name: 'home',
           builder: (context, state) => const HomeScreen(),
+        ),
+        GoRoute(
+          path: '/personalization',
+          name: 'personalization',
+          builder: (context, state) => BlocProvider(
+            create: (context) => sl<PersonalizationCubit>(),
+            child: const PersonalizationPage(),
+          ),
         ),
         GoRoute(
           path: '/update-password',

@@ -26,9 +26,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-        body: const Center(
-          child: Text('Welcome to Claritask AI!'),
-        ),
+        body: const Center(child: Text('Welcome to Claritask AI!')),
       ),
     );
   }

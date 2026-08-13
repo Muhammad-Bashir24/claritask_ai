@@ -8,17 +8,14 @@ enum DomainAuthEvent {
   passwordRecovery,
   userUpdated,
   tokenRefreshed,
-  unknown
+  unknown,
 }
 
 class AuthSessionState extends Equatable {
   final DomainAuthEvent event;
   final UserEntity? user;
 
-  const AuthSessionState({
-    required this.event,
-    this.user,
-  });
+  const AuthSessionState({required this.event, this.user});
 
   @override
   List<Object?> get props => [event, user];

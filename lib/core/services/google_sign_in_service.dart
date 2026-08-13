@@ -14,9 +14,13 @@ class GoogleSignInService {
     if (!kIsWeb && (Platform.isIOS || Platform.isMacOS)) {
       clientId = AppKeys.iosClientId;
     }
-    
-    final actualClientId = (clientId != null && clientId.contains('YOUR_')) ? null : clientId;
-    final actualServerClientId = AppKeys.webClientId.contains('YOUR_') ? null : AppKeys.webClientId;
+
+    final actualClientId = (clientId != null && clientId.contains('YOUR_'))
+        ? null
+        : clientId;
+    final actualServerClientId = AppKeys.webClientId.contains('YOUR_')
+        ? null
+        : AppKeys.webClientId;
 
     await GoogleSignIn.instance.initialize(
       clientId: actualClientId,
