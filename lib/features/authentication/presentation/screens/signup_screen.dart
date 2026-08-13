@@ -17,7 +17,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   bool _isPasswordVisible = false;
 
   @override
@@ -74,11 +75,7 @@ class _SignupScreenState extends State<SignupScreen> {
       return;
     }
 
-    context.read<AuthCubit>().register(
-          email,
-          password,
-          fullName,
-        );
+    context.read<AuthCubit>().register(email, password, fullName);
   }
 
   @override
@@ -90,7 +87,8 @@ class _SignupScreenState extends State<SignupScreen> {
         } else if (state is AuthVerificationEmailSent) {
           CustomToast.show(
             context: context,
-            message: 'A verification email has been sent. Please verify your email before logging in.',
+            message:
+                'A verification email has been sent. Please verify your email before logging in.',
             type: ToastType.success,
           );
           context.go('/auth');
@@ -155,7 +153,9 @@ class _SignupScreenState extends State<SignupScreen> {
                     obscureText: !_isPasswordVisible,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                        _isPasswordVisible
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                         color: const Color(0xFF94A3B8),
                       ),
                       onPressed: () {
@@ -173,7 +173,9 @@ class _SignupScreenState extends State<SignupScreen> {
                     obscureText: !_isPasswordVisible,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                        _isPasswordVisible
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                         color: const Color(0xFF94A3B8),
                       ),
                       onPressed: () {
@@ -238,16 +240,10 @@ class _SignupScreenState extends State<SignupScreen> {
       decoration: InputDecoration(
         hintText: hintText,
         suffixIcon: suffixIcon,
-        hintStyle: TextStyle(
-          fontSize: 14.sp,
-          color: const Color(0xFF94A3B8),
-        ),
+        hintStyle: TextStyle(fontSize: 14.sp, color: const Color(0xFF94A3B8)),
         filled: true,
         fillColor: const Color(0xFFF8FAFC),
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 16.w,
-          vertical: 14.h,
-        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.r),
           borderSide: const BorderSide(color: Color(0xFFE2E8F0)),

@@ -34,9 +34,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           );
           context.pop();
         } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       builder: (context, state) {

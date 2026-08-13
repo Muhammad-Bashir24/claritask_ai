@@ -11,7 +11,8 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDataSource {
   AuthRemoteDatasourceImpl(this._client);
 
   @override
-  Stream<AuthSessionState> get authStateChanges => _client.auth.onAuthStateChange.map((authState) {
+  Stream<AuthSessionState> get authStateChanges =>
+      _client.auth.onAuthStateChange.map((authState) {
         final user = authState.session?.user;
         DomainAuthEvent domainEvent;
         switch (authState.event) {

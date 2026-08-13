@@ -26,10 +26,7 @@ class _MarketingOnboardingScreensState extends State<MarketingOnboardingScreens>
     )..repeat(reverse: true);
 
     _bounceAnimation = Tween<double>(begin: 0.0, end: -12.0).animate(
-      CurvedAnimation(
-        parent: _bounceController,
-        curve: Curves.easeInOut,
-      ),
+      CurvedAnimation(parent: _bounceController, curve: Curves.easeInOut),
     );
   }
 
@@ -256,7 +253,9 @@ class _MarketingOnboardingScreensState extends State<MarketingOnboardingScreens>
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 14.w, vertical: 10.h),
+                          horizontal: 14.w,
+                          vertical: 10.h,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12.r),
@@ -384,13 +383,17 @@ class _MarketingOnboardingScreensState extends State<MarketingOnboardingScreens>
                     bottom: 24.h,
                     child: Container(
                       padding: EdgeInsets.symmetric(
-                          horizontal: 16.w, vertical: 8.h),
+                        horizontal: 16.w,
+                        vertical: 8.h,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20.r),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF10B981).withValues(alpha: 0.1),
+                            color: const Color(
+                              0xFF10B981,
+                            ).withValues(alpha: 0.1),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),
@@ -541,12 +544,20 @@ class CustomOverwhelmedGraphic extends StatelessWidget {
         Positioned(
           top: 20.h,
           left: 30.w,
-          child: Icon(Icons.description, size: 28.sp, color: const Color(0xFF818CF8)),
+          child: Icon(
+            Icons.description,
+            size: 28.sp,
+            color: const Color(0xFF818CF8),
+          ),
         ),
         Positioned(
           top: 10.h,
           right: 40.w,
-          child: Icon(Icons.analytics, size: 32.sp, color: const Color(0xFF6366F1)),
+          child: Icon(
+            Icons.analytics,
+            size: 32.sp,
+            color: const Color(0xFF6366F1),
+          ),
         ),
         Positioned(
           left: 10.w,
@@ -554,7 +565,11 @@ class CustomOverwhelmedGraphic extends StatelessWidget {
         ),
         Positioned(
           right: 20.w,
-          child: Icon(Icons.insert_chart_outlined, size: 30.sp, color: const Color(0xFFA5B4FC)),
+          child: Icon(
+            Icons.insert_chart_outlined,
+            size: 30.sp,
+            color: const Color(0xFFA5B4FC),
+          ),
         ),
         // Central Person Avatar
         Column(
@@ -629,11 +644,7 @@ class CustomRoadmapGraphic extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Icon(
-                Icons.auto_awesome,
-                size: 40.sp,
-                color: Colors.white,
-              ),
+              child: Icon(Icons.auto_awesome, size: 40.sp, color: Colors.white),
             ),
           ],
         ),
@@ -659,11 +670,7 @@ class CustomRoadmapGraphic extends StatelessWidget {
   }
 
   Widget _buildLine() {
-    return Container(
-      width: 24.w,
-      height: 2.h,
-      color: const Color(0xFFA7F3D0),
-    );
+    return Container(width: 24.w, height: 2.h, color: const Color(0xFFA7F3D0));
   }
 }
 

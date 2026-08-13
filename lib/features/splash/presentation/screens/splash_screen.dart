@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:claritask_ai/core/di/injection.dart';
 import 'package:claritask_ai/features/authentication/presentation/cubit/auth_cubit.dart';
+import 'package:claritask_ai/features/personalization/domain/usecases/check_onboarding_status.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -46,11 +48,23 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
-  void _navigateBasedOnState(AuthState state) {
+  void _navigateBasedOnState(AuthState state) async {
     if (!_controller.isCompleted) return;
 
     if (state is AuthAuthenticated) {
-      context.go('/home');
+      final checkOnboarding = sl<CheckOnboardingStatusUseCase>();
+      final result = await checkOnboarding();
+      if (!mounted) return;
+      result.fold(
+        (failure) => context.go('/home'), // Fallback to home if check fails
+        (isCompleted) {
+          if (isCompleted) {
+            context.go('/home');
+          } else {
+            context.go('/personalization');
+          }
+        },
+      );
     } else if (state is AuthPasswordRecovery) {
       context.go('/update-password');
     } else if (state is AuthUnauthenticated || state is AuthError) {

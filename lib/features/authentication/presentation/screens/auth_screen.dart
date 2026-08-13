@@ -1,6 +1,8 @@
 import 'package:claritask_ai/core/utils/custom_toast.dart';
 import 'package:claritask_ai/core/utils/validators.dart';
 import 'package:claritask_ai/features/authentication/presentation/cubit/auth_cubit.dart';
+import 'package:claritask_ai/core/di/injection.dart';
+import 'package:claritask_ai/features/personalization/domain/usecases/check_onboarding_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -58,9 +60,18 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is AuthAuthenticated) {
-          context.go('/home');
+          final checkOnboarding = sl<CheckOnboardingStatusUseCase>();
+          final result = await checkOnboarding();
+          if (!context.mounted) return;
+          result.fold((failure) => context.go('/home'), (isCompleted) {
+            if (isCompleted) {
+              context.go('/home');
+            } else {
+              context.go('/personalization');
+            }
+          });
         } else if (state is AuthPasswordRecovery) {
           context.go('/update-password');
         } else if (state is AuthError) {

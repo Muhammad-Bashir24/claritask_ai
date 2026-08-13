@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:claritask_ai/features/authentication/domain/entities/auth_session_state.dart';
 import 'package:claritask_ai/features/authentication/domain/repositories/auth_repository.dart';
