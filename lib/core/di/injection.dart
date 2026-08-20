@@ -11,6 +11,8 @@ import 'package:claritask_ai/features/personalization/data/repositories/personal
 import 'package:claritask_ai/features/personalization/domain/repositories/personalization_repository.dart';
 import 'package:claritask_ai/features/personalization/domain/usecases/check_onboarding_status.dart';
 import 'package:claritask_ai/features/personalization/domain/usecases/save_personalization.dart';
+import 'package:claritask_ai/features/home/presentation/cubit/home_cubit.dart';
+import 'package:claritask_ai/features/personalization/domain/usecases/get_personalization.dart';
 import 'package:claritask_ai/features/personalization/presentation/cubit/personalization_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -45,8 +47,10 @@ Future<void> initDependencies() async {
   // UseCases
   sl.registerLazySingleton(() => SavePersonalizationUseCase(sl()));
   sl.registerLazySingleton(() => CheckOnboardingStatusUseCase(sl()));
+  sl.registerLazySingleton(() => GetPersonalizationUseCase(sl()));
 
   // Cubits
   sl.registerFactory(() => AuthCubit(sl()));
   sl.registerFactory(() => PersonalizationCubit(sl()));
+  sl.registerFactory(() => HomeCubit(sl()));
 }

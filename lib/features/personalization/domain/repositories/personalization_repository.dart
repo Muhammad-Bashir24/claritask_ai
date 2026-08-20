@@ -4,4 +4,5 @@ import 'package:claritask_ai/features/personalization/domain/entities/personaliz
 abstract interface class PersonalizationRepository {
   ResultVoid savePersonalization(PersonalizationEntity personalization);
   ResultFuture<bool> checkOnboardingCompleted();
+  ResultFuture<PersonalizationEntity?> getPersonalization();
 }
