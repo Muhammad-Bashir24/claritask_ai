@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 abstract interface class PersonalizationRemoteDataSource {
   Future<void> savePersonalization(PersonalizationModel model);
   Future<bool> checkOnboardingCompleted();
+  Future<PersonalizationModel?> getPersonalization();
 }
 
 class PersonalizationRemoteDataSourceImpl
@@ -44,6 +45,30 @@ class PersonalizationRemoteDataSourceImpl
       return response['onboarding_completed'] as bool? ?? false;
     } catch (_) {
       throw ServerException('Failed to check onboarding status.');
+    }
+  }
+
+  @override
+  Future<PersonalizationModel?> getPersonalization() async {
+    final user = _client.auth.currentUser;
+    if (user == null) {
+      throw ServerException('User not authenticated.');
+    }
+
+    try {
+      final response = await _client
+          .from('user_personalization')
+          .select()
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+      if (response == null) {
+        return null;
+      }
+
+      return PersonalizationModel.fromJson(response);
+    } catch (_) {
+      throw ServerException('Failed to fetch personalization.');
     }
   }
 }

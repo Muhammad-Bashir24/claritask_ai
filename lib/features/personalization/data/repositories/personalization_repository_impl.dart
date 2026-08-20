@@ -46,4 +46,20 @@ class PersonalizationRepositoryImpl implements PersonalizationRepository {
       return const Left(UnknownFailure('Something went wrong.'));
     }
   }
+
+  @override
+  ResultFuture<PersonalizationEntity?> getPersonalization() async {
+    if (!await _networkInfo.isConnected) {
+      return const Left(NetworkFailure('No internet connection.'));
+    }
+
+    try {
+      final personalization = await _remoteDataSource.getPersonalization();
+      return Right(personalization);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    } catch (_) {
+      return const Left(UnknownFailure('Something went wrong.'));
+    }
+  }
 }

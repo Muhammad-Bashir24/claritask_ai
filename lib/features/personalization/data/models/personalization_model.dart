@@ -19,6 +19,24 @@ class PersonalizationModel extends PersonalizationEntity {
     );
   }
 
+  factory PersonalizationModel.fromJson(Map<String, dynamic> json) {
+    return PersonalizationModel(
+      primaryUsage: json['primary_usage'] as String? ?? 'other',
+      userTypes:
+          (json['user_types'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
+      biggestChallenge: json['biggest_challenge'] as String? ?? 'other',
+      taskFrequency: json['task_frequency'] as String? ?? 'occasionally',
+      taskTypes:
+          (json['task_types'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       "primary_usage": primaryUsage,
