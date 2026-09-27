@@ -2,6 +2,8 @@ import 'package:claritask_ai/core/di/injection.dart';
 import 'package:claritask_ai/features/authentication/presentation/cubit/auth_cubit.dart';
 import 'package:claritask_ai/features/home/presentation/cubit/home_cubit.dart';
 import 'package:claritask_ai/features/personalization/domain/entities/personalization.dart';
+import 'package:claritask_ai/features/tasks/presentation/cubit/create_task_cubit.dart';
+import 'package:claritask_ai/features/tasks/presentation/cubit/create_task_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -11,8 +13,11 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<HomeCubit>()..fetchHomeData(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => sl<HomeCubit>()..fetchHomeData()),
+        BlocProvider(create: (_) => sl<CreateTaskCubit>()),
+      ],
       child: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthUnauthenticated) {
@@ -93,6 +98,46 @@ class _HomeScreenContent extends StatelessWidget {
     PersonalizationEntity personalization,
     ThemeData theme,
   ) {
+    return _HomeDashboard(personalization: personalization, theme: theme);
+  }
+}
+
+class _HomeDashboard extends StatefulWidget {
+  final PersonalizationEntity personalization;
+  final ThemeData theme;
+
+  const _HomeDashboard({required this.personalization, required this.theme});
+
+  @override
+  State<_HomeDashboard> createState() => _HomeDashboardState();
+}
+
+class _HomeDashboardState extends State<_HomeDashboard> {
+  late TextEditingController _taskController;
+  bool _isButtonEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _taskController = TextEditingController();
+    _taskController.addListener(() {
+      setState(() {
+        _isButtonEnabled = _taskController.text.trim().isNotEmpty;
+      });
+      if (_taskController.text.trim().isNotEmpty) {
+        context.read<CreateTaskCubit>().clearError();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _taskController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final authState = context.read<AuthCubit>().state;
     String firstName = '';
     String? avatarUrl;
@@ -105,48 +150,76 @@ class _HomeScreenContent extends StatelessWidget {
       avatarUrl = authState.user.avatarUrl;
     }
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        await context.read<HomeCubit>().fetchHomeData();
+    return BlocConsumer<CreateTaskCubit, CreateTaskState>(
+      listener: (context, state) {
+        if (state is CreateTaskSuccess) {
+          context.push(
+            '/task-workspace',
+            extra: {'taskId': state.task.id, 'taskTitle': state.task.title},
+          ).then((_) {
+            if (context.mounted) {
+              _taskController.clear();
+              context.read<HomeCubit>().fetchHomeData();
+            }
+          });
+        }
       },
-      child: CustomScrollView(
-        physics: const BouncingScrollPhysics(
-          parent: AlwaysScrollableScrollPhysics(),
-        ),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24.0,
-                vertical: 16.0,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(context, firstName, avatarUrl, theme),
-                  const SizedBox(height: 40),
-                  _buildPersonalizedGreeting(
-                    personalization.primaryUsage,
-                    theme,
-                  ),
-                  const SizedBox(height: 12),
-                  _buildChallengeMessage(
-                    personalization.biggestChallenge,
-                    theme,
-                  ),
-                  const SizedBox(height: 40),
-                  _buildMainTaskInput(personalization.primaryUsage, theme),
-                  const SizedBox(height: 48),
-                  _buildSuggestionsSection(personalization.primaryUsage, theme),
-                  const SizedBox(height: 48),
-                  _buildRecentTasksSection(theme),
-                  const SizedBox(height: 40),
-                ],
-              ),
+      builder: (context, createTaskState) {
+        final isCreating = createTaskState is CreateTaskLoading;
+
+        return RefreshIndicator(
+          onRefresh: () async {
+            await context.read<HomeCubit>().fetchHomeData();
+          },
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
             ),
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0,
+                    vertical: 16.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildHeader(context, firstName, avatarUrl, widget.theme),
+                      const SizedBox(height: 40),
+                      _buildPersonalizedGreeting(
+                        widget.personalization.primaryUsage,
+                        widget.theme,
+                      ),
+                      const SizedBox(height: 12),
+                      _buildChallengeMessage(
+                        widget.personalization.biggestChallenge,
+                        widget.theme,
+                      ),
+                      const SizedBox(height: 40),
+                      _buildMainTaskInput(
+                        context,
+                        widget.personalization.primaryUsage,
+                        widget.theme,
+                        createTaskState,
+                        isCreating,
+                      ),
+                      const SizedBox(height: 48),
+                      _buildSuggestionsSection(
+                        widget.personalization.primaryUsage,
+                        widget.theme,
+                      ),
+                      const SizedBox(height: 48),
+                      _buildRecentTasksSection(widget.theme),
+                      const SizedBox(height: 40),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -278,7 +351,13 @@ class _HomeScreenContent extends StatelessWidget {
     );
   }
 
-  Widget _buildMainTaskInput(String primaryUsage, ThemeData theme) {
+  Widget _buildMainTaskInput(
+    BuildContext context,
+    String primaryUsage,
+    ThemeData theme,
+    CreateTaskState state,
+    bool isLoading,
+  ) {
     String hintText;
     switch (primaryUsage) {
       case 'tech_coding':
@@ -298,55 +377,101 @@ class _HomeScreenContent extends StatelessWidget {
         break;
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withValues(alpha: 0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: TextField(
-        maxLines: 4,
-        minLines: 1,
-        style: theme.textTheme.bodyLarge,
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: theme.textTheme.bodyLarge?.copyWith(
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
-          ),
-          border: OutlineInputBorder(
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(24),
-            borderSide: BorderSide.none,
-          ),
-          filled: true,
-          fillColor: theme.colorScheme.surface,
-          contentPadding: const EdgeInsets.all(24),
-          suffixIcon: Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Container(
-              margin: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
+            border: Border.all(
+              color: state is CreateTaskError
+                  ? theme.colorScheme.error
+                  : theme.colorScheme.outline.withValues(alpha: 0.1),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withValues(alpha: 0.05),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
               ),
-              child: IconButton(
-                icon: Icon(Icons.mic_rounded, color: theme.colorScheme.primary),
-                onPressed: () {
-                  // TODO: Voice input implementation
-                },
+            ],
+          ),
+          child: TextField(
+            controller: _taskController,
+            maxLines: 4,
+            minLines: 1,
+            style: theme.textTheme.bodyLarge,
+            decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle: theme.textTheme.bodyLarge?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(24),
+                borderSide: BorderSide.none,
+              ),
+              filled: true,
+              fillColor: theme.colorScheme.surface,
+              contentPadding: const EdgeInsets.all(24),
+              suffixIcon: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Container(
+                  margin: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: _isButtonEnabled 
+                      ? theme.colorScheme.primary 
+                      : theme.colorScheme.primary.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: IconButton(
+                    icon: isLoading
+                        ? SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: theme.colorScheme.onPrimary,
+                            ),
+                          )
+                        : Icon(
+                            Icons.arrow_upward_rounded, 
+                            color: _isButtonEnabled ? theme.colorScheme.onPrimary : theme.colorScheme.primary
+                          ),
+                    onPressed: (_isButtonEnabled && !isLoading)
+                        ? () {
+                            FocusScope.of(context).unfocus();
+                            context.read<CreateTaskCubit>().createTask(
+                              _taskController.text,
+                            );
+                          }
+                        : null,
+                  ),
+                ),
+              ),
+            ),
+            onSubmitted: (value) {
+              if (_isButtonEnabled && !isLoading) {
+                 context.read<CreateTaskCubit>().createTask(
+                  _taskController.text,
+                );
+              }
+            },
+          ),
+        ),
+        if (state is CreateTaskError)
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0, left: 16.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                state.message,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.error,
+                ),
               ),
             ),
           ),
-        ),
-        onSubmitted: (value) {
-          // TODO: Navigate to create task flow
-        },
-      ),
+      ],
     );
   }
 
@@ -420,7 +545,9 @@ class _HomeScreenContent extends StatelessWidget {
           children: suggestions.map((suggestion) {
             return InkWell(
               borderRadius: BorderRadius.circular(20),
-              onTap: () {},
+              onTap: () {
+                _taskController.text = suggestion;
+              },
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
