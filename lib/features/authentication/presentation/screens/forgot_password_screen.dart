@@ -1,4 +1,5 @@
 import 'package:claritask_ai/features/authentication/presentation/cubit/auth_cubit.dart';
+import 'package:claritask_ai/core/utils/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,14 +30,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthPasswordResetEmailSent) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Password reset email sent!')),
+          CustomToast.show(
+            context: context,
+            message: 'Password reset email sent!',
+            type: ToastType.success,
           );
           context.pop();
         } else if (state is AuthError) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
+          CustomToast.show(
+            context: context,
+            message: state.message,
+            type: ToastType.error,
+          );
         }
       },
       builder: (context, state) {

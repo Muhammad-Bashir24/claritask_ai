@@ -7,6 +7,8 @@ import 'package:claritask_ai/features/marketing_onbaording/presentation/screens/
 import 'package:claritask_ai/features/personalization/presentation/cubit/personalization_cubit.dart';
 import 'package:claritask_ai/features/personalization/presentation/pages/personalization_page.dart';
 import 'package:claritask_ai/features/splash/presentation/screens/splash_screen.dart';
+import 'package:claritask_ai/features/tasks/presentation/pages/create_task_page.dart';
+import 'package:claritask_ai/features/task_breakdown/presentation/pages/task_workspace_page.dart';
 import 'package:claritask_ai/core/di/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,6 +80,24 @@ class AppRouter {
           path: '/update-password',
           name: 'update-password',
           builder: (context, state) => const UpdatePasswordScreen(),
+        ),
+        GoRoute(
+          path: '/create-task',
+          name: 'create-task',
+          builder: (context, state) {
+            final primaryUsage = state.extra as String? ?? '';
+            return CreateTaskPage(primaryUsage: primaryUsage);
+          },
+        ),
+        GoRoute(
+          path: '/task-workspace',
+          name: 'task-workspace',
+          builder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>?;
+            final taskId = extra?['taskId'] as String? ?? '';
+            final taskTitle = extra?['taskTitle'] as String? ?? '';
+            return TaskWorkspacePage(taskId: taskId, taskTitle: taskTitle);
+          },
         ),
       ],
       redirect: (context, state) {
