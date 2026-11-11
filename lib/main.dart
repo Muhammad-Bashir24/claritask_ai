@@ -13,7 +13,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await dotenv.load(fileName: ".env");
+  // Load environment variables from .env asset if available.
+  // In production / web deployments, variables may also be supplied via --dart-define.
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    debugPrint("Note: .env file not loaded: $e");
+  }
 
   await SupabaseService.init();
   await GoogleSignInService.init();
