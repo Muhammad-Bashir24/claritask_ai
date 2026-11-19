@@ -57,8 +57,11 @@ class _MarketingOnboardingScreensState extends State<MarketingOnboardingScreens>
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFC),
       body: SafeArea(
-        child: Column(
-          children: [
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Column(
+              children: [
             // Top Bar
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
@@ -200,8 +203,10 @@ class _MarketingOnboardingScreensState extends State<MarketingOnboardingScreens>
           ],
         ),
       ),
-    );
-  }
+    ),
+  ),
+);
+}
 
   // Step 1: Overwhelmed
   Widget _buildOnboardingStep1() {

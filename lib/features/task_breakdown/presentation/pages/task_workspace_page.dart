@@ -40,11 +40,13 @@ class _TaskWorkspacePageState extends State<TaskWorkspacePage> {
   Widget _buildLoadingState(BuildContext context) {
     final theme = Theme.of(context);
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 600),
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
             Container(
               width: 120,
               height: 120,
@@ -141,8 +143,9 @@ class _TaskWorkspacePageState extends State<TaskWorkspacePage> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -229,9 +232,13 @@ class _TaskWorkspacePageState extends State<TaskWorkspacePage> {
                 int totalCount = steps.length;
                 double progress = totalCount > 0 ? completedCount / totalCount : 0;
 
-                return Stack(
-                  children: [
-                    CustomScrollView(
+                return Align(
+                  alignment: Alignment.topCenter,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 880),
+                    child: Stack(
+                      children: [
+                        CustomScrollView(
                       slivers: [
                         SliverToBoxAdapter(
                           child: Padding(
@@ -409,8 +416,10 @@ class _TaskWorkspacePageState extends State<TaskWorkspacePage> {
                       ),
                     ),
                   ],
-                );
-              }
+                ),
+              ),
+            );
+          }
 
               return const SizedBox.shrink();
             },

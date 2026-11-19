@@ -50,20 +50,25 @@ class PersonalizationPage extends StatelessWidget {
         return Scaffold(
           backgroundColor: const Color(0xFFFAFAFC),
           body: SafeArea(
-            child: Column(
-              children: [
-                _buildProgressHeader(state),
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 24.w,
-                      vertical: 20.h,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 680),
+                child: Column(
+                  children: [
+                    _buildProgressHeader(state),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 24.w,
+                          vertical: 20.h,
+                        ),
+                        child: _buildCurrentStep(context, state),
+                      ),
                     ),
-                    child: _buildCurrentStep(context, state),
-                  ),
+                    _buildBottomBar(context, state),
+                  ],
                 ),
-                _buildBottomBar(context, state),
-              ],
+              ),
             ),
           ),
         );

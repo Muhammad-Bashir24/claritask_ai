@@ -1,9 +1,10 @@
 import 'package:claritask_ai/app/router.dart';
+import 'package:claritask_ai/app/theme/app_theme.dart';
 import 'package:claritask_ai/features/authentication/presentation/cubit/auth_cubit.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class MyApp extends StatefulWidget {
@@ -24,18 +25,15 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      builder: (context, child) {
-        return MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          routerConfig: _router,
-          locale: DevicePreview.locale(context),
-          builder: DevicePreview.appBuilder,
-          theme: ThemeData.light(),
-          darkTheme: ThemeData.dark(),
-          themeMode: ThemeMode.light,
-        );
-      },
+    return MaterialApp.router(
+      title: 'ClariTask AI',
+      debugShowCheckedModeBanner: false,
+      routerConfig: _router,
+      locale: kIsWeb ? null : DevicePreview.locale(context),
+      builder: kIsWeb ? null : DevicePreview.appBuilder,
+      theme: AppTheme.light,
+      darkTheme: ThemeData.dark(),
+      themeMode: ThemeMode.light,
     );
   }
 }

@@ -115,11 +115,14 @@ class _CreateTaskViewState extends State<_CreateTaskView> {
           final isLoading = state is CreateTaskLoading;
 
           return SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 800),
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                   Text(
                     'What do you need to get done?',
                     style: theme.textTheme.headlineMedium?.copyWith(
@@ -256,7 +259,9 @@ class _CreateTaskViewState extends State<_CreateTaskView> {
                 ],
               ),
             ),
-          );
+          ),
+        ),
+      );
         },
       ),
     );

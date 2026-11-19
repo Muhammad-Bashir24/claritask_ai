@@ -28,11 +28,17 @@ void main() async {
 
   runApp(
     DevicePreview(
-      enabled: !kReleaseMode,
+      enabled: !kReleaseMode && !kIsWeb,
       builder: (context) => ScreenUtilInit(
-        designSize: const Size(390, 844), // Example: iPhone 12
+        designSize: const Size(390, 844),
         minTextAdapt: true,
         splitScreenMode: true,
+        fontSizeResolver: (fontSize, instance) {
+          if (kIsWeb || instance.screenWidth > 600) {
+            return fontSize.toDouble();
+          }
+          return fontSize * instance.scaleText;
+        },
         builder: (context, child) {
           return MultiBlocProvider(
             providers: [

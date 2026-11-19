@@ -4,6 +4,7 @@ import 'package:claritask_ai/features/home/presentation/cubit/home_cubit.dart';
 import 'package:claritask_ai/features/personalization/domain/entities/personalization.dart';
 import 'package:claritask_ai/features/tasks/presentation/cubit/create_task_cubit.dart';
 import 'package:claritask_ai/features/tasks/presentation/cubit/create_task_state.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -177,42 +178,47 @@ class _HomeDashboardState extends State<_HomeDashboard> {
             ),
             slivers: [
               SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0,
-                    vertical: 16.0,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildHeader(context, firstName, avatarUrl, widget.theme),
-                      const SizedBox(height: 40),
-                      _buildPersonalizedGreeting(
-                        widget.personalization.primaryUsage,
-                        widget.theme,
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 880),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0,
+                        vertical: 16.0,
                       ),
-                      const SizedBox(height: 12),
-                      _buildChallengeMessage(
-                        widget.personalization.biggestChallenge,
-                        widget.theme,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildHeader(context, firstName, avatarUrl, widget.theme),
+                          const SizedBox(height: 40),
+                          _buildPersonalizedGreeting(
+                            widget.personalization.primaryUsage,
+                            widget.theme,
+                          ),
+                          const SizedBox(height: 12),
+                          _buildChallengeMessage(
+                            widget.personalization.biggestChallenge,
+                            widget.theme,
+                          ),
+                          const SizedBox(height: 40),
+                          _buildMainTaskInput(
+                            context,
+                            widget.personalization.primaryUsage,
+                            widget.theme,
+                            createTaskState,
+                            isCreating,
+                          ),
+                          const SizedBox(height: 48),
+                          _buildSuggestionsSection(
+                            widget.personalization.primaryUsage,
+                            widget.theme,
+                          ),
+                          const SizedBox(height: 48),
+                          _buildRecentTasksSection(widget.theme),
+                          const SizedBox(height: 40),
+                        ],
                       ),
-                      const SizedBox(height: 40),
-                      _buildMainTaskInput(
-                        context,
-                        widget.personalization.primaryUsage,
-                        widget.theme,
-                        createTaskState,
-                        isCreating,
-                      ),
-                      const SizedBox(height: 48),
-                      _buildSuggestionsSection(
-                        widget.personalization.primaryUsage,
-                        widget.theme,
-                      ),
-                      const SizedBox(height: 48),
-                      _buildRecentTasksSection(widget.theme),
-                      const SizedBox(height: 40),
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -257,21 +263,49 @@ class _HomeDashboardState extends State<_HomeDashboard> {
               ),
             ),
             const SizedBox(width: 16),
-            Text(
-              firstName.isNotEmpty ? 'Hey, $firstName' : 'Welcome back',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  firstName.isNotEmpty ? 'Hey, $firstName' : 'Welcome back',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                  ),
+                ),
+                if (kIsWeb)
+                  Text(
+                    'ClariTask AI Workspace',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+              ],
             ),
           ],
         ),
-        IconButton(
-          icon: Icon(
-            Icons.logout_rounded,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-          ),
-          onPressed: () => context.read<AuthCubit>().logout(),
+        Row(
+          children: [
+            if (kIsWeb)
+              TextButton.icon(
+                onPressed: () => context.push('/landing'),
+                icon: const Icon(Icons.public_rounded, size: 16),
+                label: const Text('Landing Page'),
+                style: TextButton.styleFrom(
+                  foregroundColor:
+                      theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                ),
+              ),
+            IconButton(
+              icon: Icon(
+                Icons.logout_rounded,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+              tooltip: 'Logout',
+              onPressed: () => context.read<AuthCubit>().logout(),
+            ),
+          ],
         ),
       ],
     );
@@ -682,12 +716,15 @@ class _HomeSkeletonState extends State<_HomeSkeleton>
       builder: (context, child) {
         return Opacity(opacity: 0.5 + (_controller.value * 0.5), child: child);
       },
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-        physics: const NeverScrollableScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 880),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            physics: const NeverScrollableScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
             // Header skeleton
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -824,6 +861,8 @@ class _HomeSkeletonState extends State<_HomeSkeleton>
           ],
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 }

@@ -22,7 +22,6 @@ class CustomToast {
         icon = Icons.error_outline;
         break;
       case ToastType.info:
-      default:
         backgroundColor = const Color(0xFF3B82F6); // Blue 500
         icon = Icons.info_outline;
         break;

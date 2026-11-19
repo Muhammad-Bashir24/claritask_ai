@@ -3,6 +3,7 @@ import 'package:claritask_ai/features/authentication/presentation/screens/forgot
 import 'package:claritask_ai/features/authentication/presentation/screens/signup_screen.dart';
 import 'package:claritask_ai/features/authentication/presentation/screens/update_password_screen.dart';
 import 'package:claritask_ai/features/home/presentation/screens/home_screen.dart';
+import 'package:claritask_ai/features/landing/presentation/screens/landing_screen.dart';
 import 'package:claritask_ai/features/marketing_onbaording/presentation/screens/marketing_onboarding_sreens.dart';
 import 'package:claritask_ai/features/personalization/presentation/cubit/personalization_cubit.dart';
 import 'package:claritask_ai/features/personalization/presentation/pages/personalization_page.dart';
@@ -10,7 +11,7 @@ import 'package:claritask_ai/features/splash/presentation/screens/splash_screen.
 import 'package:claritask_ai/features/tasks/presentation/pages/create_task_page.dart';
 import 'package:claritask_ai/features/task_breakdown/presentation/pages/task_workspace_page.dart';
 import 'package:claritask_ai/core/di/injection.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
@@ -35,9 +36,32 @@ class GoRouterRefreshStream extends ChangeNotifier {
 class AppRouter {
   static GoRouter createRouter(Stream<dynamic> authStateStream) {
     return GoRouter(
-      initialLocation: '/splash',
+      initialLocation: kIsWeb ? '/landing' : '/splash',
       refreshListenable: GoRouterRefreshStream(authStateStream),
       routes: [
+        GoRoute(
+          path: '/',
+          name: 'root',
+          redirect: (context, state) {
+            if (kIsWeb) {
+              return '/landing';
+            } else {
+              return '/splash';
+            }
+          },
+        ),
+        GoRoute(
+          path: '/landing',
+          name: 'landing',
+          redirect: (context, state) {
+            // Landing page is ONLY accessible on web platforms!
+            if (!kIsWeb) {
+              return '/splash';
+            }
+            return null;
+          },
+          builder: (context, state) => const LandingScreen(),
+        ),
         GoRoute(
           path: '/splash',
           name: 'splash',
@@ -102,9 +126,17 @@ class AppRouter {
       ],
       redirect: (context, state) {
         final location = state.uri.toString();
-        // Intercept the deep link from Supabase to prevent "no routes for location" error
+        // Intercept deep links from Supabase to prevent "no routes for location" error
         if (location.contains('auth-callback') || location.contains('code=')) {
           return '/splash';
+        }
+        // Ensure landing page is strictly inaccessible on native platforms
+        if (!kIsWeb && (location == '/' || location.startsWith('/landing'))) {
+          return '/splash';
+        }
+        // Redirect web root to landing page
+        if (kIsWeb && location == '/') {
+          return '/landing';
         }
         return null;
       },
