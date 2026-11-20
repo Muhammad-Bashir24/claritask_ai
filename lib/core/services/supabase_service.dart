@@ -8,11 +8,10 @@ class SupabaseService {
     final anonKey = AppKeys.supabaseAnonKey;
 
     if (url.isEmpty || anonKey.isEmpty) {
-      debugPrint(
-        'Warning: Supabase URL or Anon Key is missing. '
-        'Ensure .env is configured or pass --dart-define / --dart-define-from-file.',
+      throw StateError(
+        'Supabase configuration is missing. '
+        'Check SUPABASE_URL and SUPABASE_ANON_KEY.',
       );
-      return;
     }
 
     await Supabase.initialize(
@@ -20,6 +19,8 @@ class SupabaseService {
       // ignore: deprecated_member_use
       anonKey: anonKey,
     );
+
+    debugPrint('Supabase initialized successfully.');
   }
 
   static SupabaseClient get client => Supabase.instance.client;
