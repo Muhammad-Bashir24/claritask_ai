@@ -4,10 +4,57 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class LandingHeroSection extends StatelessWidget {
-  final VoidCallback onTryDemoTap;
+class LandingHeroSection extends StatefulWidget {
+  final VoidCallback onSeeHowItWorksTap;
 
-  const LandingHeroSection({super.key, required this.onTryDemoTap});
+  const LandingHeroSection({
+    super.key,
+    required this.onSeeHowItWorksTap,
+  });
+
+  @override
+  State<LandingHeroSection> createState() => _LandingHeroSectionState();
+}
+
+class _LandingHeroSectionState extends State<LandingHeroSection> {
+  // 8 steps from Section 5 of the Product Brief
+  final List<_HeroStepItem> _steps = [
+    _HeroStepItem(
+      title: 'Decide what sections your portfolio should contain.',
+      isCompleted: true,
+    ),
+    _HeroStepItem(
+      title: 'Choose the technologies you want to use.',
+      isCompleted: true,
+    ),
+    _HeroStepItem(
+      title: 'Create a new project.',
+      isCompleted: true,
+    ),
+    _HeroStepItem(
+      title: 'Set up the project structure.',
+      isCompleted: false,
+    ),
+    _HeroStepItem(
+      title: 'Design the homepage.',
+      isCompleted: false,
+    ),
+    _HeroStepItem(
+      title: 'Add your projects and professional information.',
+      isCompleted: false,
+    ),
+    _HeroStepItem(
+      title: 'Test the website on different screen sizes.',
+      isCompleted: false,
+    ),
+    _HeroStepItem(
+      title: 'Deploy your portfolio.',
+      isCompleted: false,
+    ),
+  ];
+
+  int get _completedCount => _steps.where((s) => s.isCompleted).length;
+  double get _progress => _steps.isEmpty ? 0 : _completedCount / _steps.length;
 
   @override
   Widget build(BuildContext context) {
@@ -15,45 +62,40 @@ class LandingHeroSection extends StatelessWidget {
     final isAuthenticated = authState is AuthAuthenticated;
 
     return ResponsiveContainer(
+      maxWidth: 1100,
       padding: EdgeInsets.symmetric(
         horizontal: context.isMobile ? 20 : 32,
-        vertical: context.isMobile ? 36 : 64,
+        vertical: context.isMobile ? 36 : 60,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Announcement Pill
+          // Trust / Category Badge
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: const Color(0xFF243B6B).withValues(alpha: 0.08),
+              color: const Color(0xFFF1F5F9),
               borderRadius: BorderRadius.circular(30),
-              border: Border.all(
-                color: const Color(0xFF243B6B).withValues(alpha: 0.2),
-              ),
+              border: Border.all(color: const Color(0xFFE2E8F0)),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(4),
+                  width: 8,
+                  height: 8,
                   decoration: const BoxDecoration(
                     color: Color(0xFF10B981),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    Icons.auto_awesome,
-                    size: 10,
-                    color: Colors.white,
-                  ),
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Powered by Cognitive AI • Now Available on Web',
+                  'AI-Powered Task Breakdown & Execution Assistant',
                   style: TextStyle(
                     fontSize: context.isMobile ? 12 : 13,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF243B6B),
+                    color: const Color(0xFF334155),
                   ),
                 ),
               ],
@@ -61,9 +103,9 @@ class LandingHeroSection extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // Main Headline
+          // Main Headline (from Brief Section 8 & 10)
           Text(
-            'Turn Overwhelming Tasks',
+            'Turn any task into simple steps.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: context.isMobile ? 32 : (context.isTablet ? 46 : 56),
@@ -73,46 +115,29 @@ class LandingHeroSection extends StatelessWidget {
               letterSpacing: -1.2,
             ),
           ),
-          ShaderMask(
-            shaderCallback: (bounds) => const LinearGradient(
-              colors: [Color(0xFF243B6B), Color(0xFF10B981), Color(0xFF6366F1)],
-            ).createShader(bounds),
-            child: Text(
-              'Into Clear, Actionable Steps.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: context.isMobile ? 32 : (context.isTablet ? 46 : 56),
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
-                height: 1.15,
-                letterSpacing: -1.2,
-              ),
-            ),
-          ),
           const SizedBox(height: 20),
 
-          // Subtitle
+          // Supporting Description (from Brief Section 8 & 10)
           ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 720),
+            constraints: const BoxConstraints(maxWidth: 680),
             child: Text(
-              'ClariTask AI deconstructs ambitious projects, study sessions, complex code architectures, and daily to-dos into frictionless micro-actions. Say goodbye to task paralysis and hello to momentum.',
+              'Tell ClariTaskAI what you need to get done. Get a clear, practical breakdown and take it one step at a time.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: context.isMobile ? 15 : 18,
-                color: const Color(0xFF64748B),
-                height: 1.6,
+                fontSize: context.isMobile ? 16 : 18,
+                color: const Color(0xFF475569),
+                height: 1.55,
                 fontWeight: FontWeight.w400,
               ),
             ),
           ),
-          const SizedBox(height: 36),
+          const SizedBox(height: 32),
 
           // CTA Buttons
           Wrap(
             spacing: 16,
             runSpacing: 14,
             alignment: WrapAlignment.center,
-            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               ElevatedButton(
                 onPressed: () {
@@ -126,24 +151,23 @@ class LandingHeroSection extends StatelessWidget {
                   backgroundColor: const Color(0xFF0F172A),
                   foregroundColor: Colors.white,
                   minimumSize: Size.zero,
-                  elevation: 4,
-                  shadowColor: const Color(0xFF0F172A).withValues(alpha: 0.3),
                   padding: EdgeInsets.symmetric(
                     horizontal: context.isMobile ? 24 : 32,
-                    vertical: context.isMobile ? 16 : 20,
+                    vertical: context.isMobile ? 14 : 18,
                   ),
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      isAuthenticated ? 'Launch Dashboard' : 'Get Started Free',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                      isAuthenticated ? 'Go to Dashboard' : 'Get Started',
+                      style: TextStyle(
+                        fontSize: context.isMobile ? 15 : 16,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -151,87 +175,339 @@ class LandingHeroSection extends StatelessWidget {
                   ],
                 ),
               ),
-              OutlinedButton.icon(
-                onPressed: onTryDemoTap,
-                icon: const Icon(Icons.play_circle_outline_rounded, size: 20),
-                label: const Text('Try Live Demo'),
+              OutlinedButton(
+                onPressed: widget.onSeeHowItWorksTap,
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: const Color(0xFF1E293B),
+                  foregroundColor: const Color(0xFF0F172A),
                   side: const BorderSide(color: Color(0xFFCBD5E1), width: 1.5),
-                  backgroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(
-                    horizontal: context.isMobile ? 20 : 26,
-                    vertical: context.isMobile ? 16 : 20,
+                    horizontal: context.isMobile ? 20 : 28,
+                    vertical: context.isMobile ? 14 : 18,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  textStyle: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.play_circle_outline_rounded, size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      'See How It Works',
+                      style: TextStyle(
+                        fontSize: context.isMobile ? 15 : 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 28),
+          const SizedBox(height: 48),
 
-          // Trust Social Proof Chips
-          Wrap(
-            spacing: 24,
-            runSpacing: 12,
-            alignment: WrapAlignment.center,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: List.generate(
-                      5,
-                      (index) => const Icon(
-                        Icons.star_rounded,
-                        color: Color(0xFFF59E0B),
-                        size: 18,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    '4.9/5 Rating',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF334155),
-                    ),
-                  ),
-                ],
-              ),
-              _buildTrustBadge(Icons.bolt_rounded, 'Instant AI breakdown'),
-              _buildTrustBadge(Icons.credit_card_off_rounded, 'No credit card needed'),
-              _buildTrustBadge(Icons.devices_rounded, 'Synced across Web & Mobile'),
-            ],
-          ),
+          // Hero Visual: Realistic ClariTaskAI Application Mockup
+          _buildHeroWorkspaceMockup(context),
         ],
       ),
     );
   }
 
-  Widget _buildTrustBadge(IconData icon, String label) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 16, color: const Color(0xFF10B981)),
-        const SizedBox(width: 6),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 13,
-            color: Color(0xFF64748B),
-            fontWeight: FontWeight.w500,
+  Widget _buildHeroWorkspaceMockup(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF0F172A).withValues(alpha: 0.08),
+            blurRadius: 32,
+            offset: const Offset(0, 16),
           ),
+          BoxShadow(
+            color: const Color(0xFF0F172A).withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Window Header
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+              color: const Color(0xFFF8FAFC),
+              child: Row(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 10,
+                        height: 10,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFEF4444),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Container(
+                        width: 10,
+                        height: 10,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFF59E0B),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Container(
+                        width: 10,
+                        height: 10,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF10B981),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.splitscreen_rounded,
+                        size: 16,
+                        color: Color(0xFF64748B),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'ClariTask Workspace Preview',
+                        style: TextStyle(
+                          fontSize: context.isMobile ? 12 : 13,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF64748B),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  const SizedBox(width: 40),
+                ],
+              ),
+            ),
+            const Divider(height: 1, color: Color(0xFFE2E8F0)),
+
+            // Mockup Workspace Body
+            Padding(
+              padding: EdgeInsets.all(context.isMobile ? 16 : 28),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Task Input Display
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF8FAFC),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.edit_note_rounded,
+                              size: 18,
+                              color: Color(0xFF2563EB),
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'Task Described:',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF64748B),
+                              ),
+                            ),
+                            const Spacer(),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFDCFCE7),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: const Text(
+                                'AI Breakdown Ready',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF15803D),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '"I want to build a personal portfolio website."',
+                          style: TextStyle(
+                            fontSize: context.isMobile ? 15 : 17,
+                            fontWeight: FontWeight.w700,
+                            color: const Color(0xFF0F172A),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Progress & Completion Meter
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Actionable Steps ($_completedCount of ${_steps.length} completed)',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF0F172A),
+                        ),
+                      ),
+                      Text(
+                        '${(_progress * 100).toInt()}% Done',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF2563EB),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: TweenAnimationBuilder<double>(
+                      duration: const Duration(milliseconds: 300),
+                      tween: Tween<double>(begin: 0, end: _progress),
+                      builder: (context, value, child) {
+                        return LinearProgressIndicator(
+                          value: value,
+                          minHeight: 8,
+                          backgroundColor: const Color(0xFFE2E8F0),
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                            Color(0xFF2563EB),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Interactive Steps List (The 8 Steps from Section 5 of Brief)
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _steps.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 8),
+                    itemBuilder: (context, index) {
+                      final step = _steps[index];
+                      return Material(
+                        color: step.isCompleted
+                            ? const Color(0xFFF8FAFC)
+                            : Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: BorderSide(
+                            color: step.isCompleted
+                                ? const Color(0xFFE2E8F0)
+                                : const Color(0xFFCBD5E1),
+                          ),
+                        ),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(10),
+                          onTap: () {
+                            setState(() {
+                              step.isCompleted = !step.isCompleted;
+                            });
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 12,
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  step.isCompleted
+                                      ? Icons.check_circle_rounded
+                                      : Icons.radio_button_unchecked_rounded,
+                                  color: step.isCompleted
+                                      ? const Color(0xFF10B981)
+                                      : const Color(0xFF94A3B8),
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 12),
+                                Text(
+                                  '${index + 1}.',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700,
+                                    color: step.isCompleted
+                                        ? const Color(0xFF94A3B8)
+                                        : const Color(0xFF64748B),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    step.title,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: step.isCompleted
+                                          ? FontWeight.w500
+                                          : FontWeight.w600,
+                                      color: step.isCompleted
+                                          ? const Color(0xFF94A3B8)
+                                          : const Color(0xFF1E293B),
+                                      decoration: step.isCompleted
+                                          ? TextDecoration.lineThrough
+                                          : null,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
+}
+
+class _HeroStepItem {
+  final String title;
+  bool isCompleted;
+
+  _HeroStepItem({
+    required this.title,
+    this.isCompleted = false,
+  });
 }
