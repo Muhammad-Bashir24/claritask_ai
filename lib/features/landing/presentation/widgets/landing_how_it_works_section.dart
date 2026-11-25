@@ -6,147 +6,166 @@ class LandingHowItWorksSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveContainer(
+    return Container(
+      width: double.infinity,
+      color: Colors.white,
       padding: EdgeInsets.symmetric(
         horizontal: context.isMobile ? 20 : 32,
-        vertical: 64,
+        vertical: context.isMobile ? 48 : 80,
       ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-            decoration: BoxDecoration(
-              color: const Color(0xFF10B981).withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Text(
-              'SIMPLE THREE-STEP FLOW',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF059669),
-                letterSpacing: 1.0,
+      child: ResponsiveContainer(
+        maxWidth: 1080,
+        child: Column(
+          children: [
+            // Section Tag
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              decoration: BoxDecoration(
+                color: const Color(0xFF0F172A).withValues(alpha: 0.06),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Text(
+                'SIMPLE 3-STAGE FLOW',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF0F172A),
+                  letterSpacing: 0.8,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'From Overwhelmed to In-Flow in 10 Seconds',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: context.isMobile ? 24 : 34,
-              fontWeight: FontWeight.w800,
-              color: const Color(0xFF0F172A),
-              letterSpacing: -0.5,
-            ),
-          ),
-          const SizedBox(height: 12),
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600),
-            child: const Text(
-              'No elaborate configuration or complicated hierarchies. Just raw input transformed into frictionless action.',
+            const SizedBox(height: 16),
+
+            // Headline
+            Text(
+              'How It Works',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 15,
-                color: Color(0xFF64748B),
-                height: 1.5,
+                fontSize: context.isMobile ? 26 : 36,
+                fontWeight: FontWeight.w800,
+                color: const Color(0xFF0F172A),
+                letterSpacing: -0.6,
               ),
             ),
-          ),
-          const SizedBox(height: 48),
+            const SizedBox(height: 12),
 
-          // 3 Steps
-          if (context.isWide)
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: _StepCard(
-                    number: '01',
-                    icon: Icons.edit_note_rounded,
-                    title: 'Type Your Big Goal',
-                    description:
-                        'Speak or write whatever you are dreading: "Build a Flutter web landing page" or "Clean the entire garage".',
-                  ),
+            // Core Flow Indicator
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 620),
+              child: Text(
+                'Describe → Break Down → Take Action → Complete',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: context.isMobile ? 14 : 16,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF2563EB),
+                  letterSpacing: 0.5,
                 ),
-                _buildConnectingArrow(),
-                Expanded(
-                  child: _StepCard(
-                    number: '02',
-                    icon: Icons.auto_awesome_rounded,
-                    title: 'AI Synthesizes Path',
-                    description:
-                        'Our cognitive engine estimates times, determines dependency order, and structures 3 to 7 achievable micro-steps.',
-                  ),
-                ),
-                _buildConnectingArrow(),
-                Expanded(
-                  child: _StepCard(
-                    number: '03',
-                    icon: Icons.check_circle_rounded,
-                    title: 'Crush Micro-Actions',
-                    description:
-                        'Check off one manageable step at a time. Watch your progress bar advance and enjoy unstoppable dopamine momentum.',
-                  ),
-                ),
-              ],
-            )
-          else
-            Column(
-              children: [
-                _StepCard(
-                  number: '01',
-                  icon: Icons.edit_note_rounded,
-                  title: 'Type Your Big Goal',
-                  description:
-                      'Speak or write whatever you are dreading: "Build a Flutter web landing page" or "Clean the entire garage".',
-                ),
-                const SizedBox(height: 24),
-                _StepCard(
-                  number: '02',
-                  icon: Icons.auto_awesome_rounded,
-                  title: 'AI Synthesizes Path',
-                  description:
-                      'Our cognitive engine estimates times, determines dependency order, and structures 3 to 7 achievable micro-steps.',
-                ),
-                const SizedBox(height: 24),
-                _StepCard(
-                  number: '03',
-                  icon: Icons.check_circle_rounded,
-                  title: 'Crush Micro-Actions',
-                  description:
-                      'Check off one manageable step at a time. Watch your progress bar advance and enjoy unstoppable dopamine momentum.',
-                ),
-              ],
+              ),
             ),
-        ],
+            const SizedBox(height: 48),
+
+            // The 3 Simple Stages (from Brief Section 4 & 10)
+            if (context.isWide)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: _StageCard(
+                      stageNumber: '1',
+                      title: 'Tell us your task',
+                      description:
+                          'Describe what you need to get done using natural language or voice.',
+                      example: '"I need to prepare for my Biology midterm exam."',
+                      icon: Icons.chat_bubble_outline_rounded,
+                    ),
+                  ),
+                  _buildStageConnector(),
+                  Expanded(
+                    child: _StageCard(
+                      stageNumber: '2',
+                      title: 'Get your breakdown',
+                      description:
+                          'ClariTaskAI turns your task into a sequence of clear, practical steps.',
+                      example: '8 clear actions generated with zero guesswork.',
+                      icon: Icons.auto_awesome_outlined,
+                    ),
+                  ),
+                  _buildStageConnector(),
+                  Expanded(
+                    child: _StageCard(
+                      stageNumber: '3',
+                      title: 'Work through each step',
+                      description:
+                          'Complete the actions one at a time and track your progress to finish.',
+                      example: 'Check off steps and stay focused on what is next.',
+                      icon: Icons.check_circle_outline_rounded,
+                    ),
+                  ),
+                ],
+              )
+            else
+              Column(
+                children: [
+                  _StageCard(
+                    stageNumber: '1',
+                    title: 'Tell us your task',
+                    description:
+                        'Describe what you need to get done using natural language or voice.',
+                    example: '"I need to prepare for my Biology midterm exam."',
+                    icon: Icons.chat_bubble_outline_rounded,
+                  ),
+                  const SizedBox(height: 16),
+                  _StageCard(
+                    stageNumber: '2',
+                    title: 'Get your breakdown',
+                    description:
+                        'ClariTaskAI turns your task into a sequence of clear, practical steps.',
+                    example: '8 clear actions generated with zero guesswork.',
+                    icon: Icons.auto_awesome_outlined,
+                  ),
+                  const SizedBox(height: 16),
+                  _StageCard(
+                    stageNumber: '3',
+                    title: 'Work through each step',
+                    description:
+                        'Complete the actions one at a time and track your progress to finish.',
+                    example: 'Check off steps and stay focused on what is next.',
+                    icon: Icons.check_circle_outline_rounded,
+                  ),
+                ],
+              ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildConnectingArrow() {
+  Widget _buildStageConnector() {
     return Padding(
-      padding: const EdgeInsets.only(top: 60, left: 12, right: 12),
+      padding: const EdgeInsets.only(top: 48, left: 12, right: 12),
       child: Icon(
-        Icons.east_rounded,
+        Icons.arrow_forward_rounded,
+        size: 20,
         color: const Color(0xFFCBD5E1),
-        size: 24,
       ),
     );
   }
 }
 
-class _StepCard extends StatelessWidget {
-  final String number;
-  final IconData icon;
+class _StageCard extends StatelessWidget {
+  final String stageNumber;
   final String title;
   final String description;
+  final String example;
+  final IconData icon;
 
-  const _StepCard({
-    required this.number,
-    required this.icon,
+  const _StageCard({
+    required this.stageNumber,
     required this.title,
     required this.description,
+    required this.example,
+    required this.icon,
   });
 
   @override
@@ -154,16 +173,9 @@ class _StepCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: const Color(0xFFE2E8F0)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 15,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,39 +184,60 @@ class _StepCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                width: 36,
+                height: 36,
                 decoration: BoxDecoration(
                   color: const Color(0xFF0F172A),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, color: Colors.white, size: 24),
-              ),
-              Text(
-                number,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w900,
-                  color: const Color(0xFF0F172A).withValues(alpha: 0.15),
+                alignment: Alignment.center,
+                child: Text(
+                  stageNumber,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
+              Icon(icon, size: 24, color: const Color(0xFF64748B)),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
           Text(
             title,
             style: const TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w800,
               color: Color(0xFF0F172A),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           Text(
             description,
             style: const TextStyle(
               fontSize: 14,
               color: Color(0xFF64748B),
               height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: const Color(0xFFE2E8F0)),
+            ),
+            child: Text(
+              example,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF475569),
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ),
         ],
