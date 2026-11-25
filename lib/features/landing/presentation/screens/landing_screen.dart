@@ -1,14 +1,12 @@
+import 'package:claritask_ai/features/landing/presentation/widgets/landing_benefits_section.dart';
 import 'package:claritask_ai/features/landing/presentation/widgets/landing_cta_banner.dart';
-import 'package:claritask_ai/features/landing/presentation/widgets/landing_faq_section.dart';
 import 'package:claritask_ai/features/landing/presentation/widgets/landing_features_section.dart';
 import 'package:claritask_ai/features/landing/presentation/widgets/landing_footer.dart';
 import 'package:claritask_ai/features/landing/presentation/widgets/landing_hero_section.dart';
 import 'package:claritask_ai/features/landing/presentation/widgets/landing_how_it_works_section.dart';
-import 'package:claritask_ai/features/landing/presentation/widgets/landing_interactive_preview.dart';
-import 'package:claritask_ai/features/landing/presentation/widgets/landing_metrics_section.dart';
 import 'package:claritask_ai/features/landing/presentation/widgets/landing_navbar.dart';
 import 'package:claritask_ai/features/landing/presentation/widgets/landing_problem_solution_section.dart';
-import 'package:claritask_ai/features/landing/presentation/widgets/landing_testimonials_section.dart';
+import 'package:claritask_ai/features/landing/presentation/widgets/landing_showcase_section.dart';
 import 'package:claritask_ai/features/landing/presentation/widgets/landing_use_cases_section.dart';
 import 'package:flutter/material.dart';
 
@@ -22,10 +20,9 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   final GlobalKey _featuresKey = GlobalKey();
   final GlobalKey _howItWorksKey = GlobalKey();
-  final GlobalKey _personasKey = GlobalKey();
-  final GlobalKey _testimonialsKey = GlobalKey();
-  final GlobalKey _faqKey = GlobalKey();
-  final GlobalKey _demoKey = GlobalKey();
+  final GlobalKey _useCasesKey = GlobalKey();
+  final GlobalKey _showcaseKey = GlobalKey();
+  final GlobalKey _benefitsKey = GlobalKey();
 
   void _scrollToKey(GlobalKey key) {
     final targetContext = key.currentContext;
@@ -45,57 +42,69 @@ class _LandingScreenState extends State<LandingScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Top Navigation Bar
+            // Section 1: Navigation
             LandingNavbar(
               onFeaturesTap: () => _scrollToKey(_featuresKey),
               onHowItWorksTap: () => _scrollToKey(_howItWorksKey),
-              onPersonasTap: () => _scrollToKey(_personasKey),
-              onTestimonialsTap: () => _scrollToKey(_testimonialsKey),
-              onFaqTap: () => _scrollToKey(_faqKey),
+              onUseCasesTap: () => _scrollToKey(_useCasesKey),
+              onShowcaseTap: () => _scrollToKey(_showcaseKey),
+              onBenefitsTap: () => _scrollToKey(_benefitsKey),
             ),
 
-            // Scrollable Page Content
+            // Scrollable Content (Sections 2 through 9)
             Expanded(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: [
+                    // Section 2: Hero
                     LandingHeroSection(
-                      onTryDemoTap: () => _scrollToKey(_demoKey),
+                      onSeeHowItWorksTap: () => _scrollToKey(_howItWorksKey),
                     ),
-                    const LandingMetricsSection(),
-                    KeyedSubtree(
-                      key: _demoKey,
-                      child: const LandingInteractivePreview(),
-                    ),
+
+                    // Section 3: Problem and Solution
                     const LandingProblemSolutionSection(),
-                    KeyedSubtree(
-                      key: _featuresKey,
-                      child: const LandingFeaturesSection(),
-                    ),
+
+                    // Section 4: How It Works
                     KeyedSubtree(
                       key: _howItWorksKey,
                       child: const LandingHowItWorksSection(),
                     ),
+
+                    // Section 5: Use Cases
                     KeyedSubtree(
-                      key: _personasKey,
+                      key: _useCasesKey,
                       child: const LandingUseCasesSection(),
                     ),
+
+                    // Section 6: Product Showcase
                     KeyedSubtree(
-                      key: _testimonialsKey,
-                      child: const LandingTestimonialsSection(),
+                      key: _showcaseKey,
+                      child: const LandingShowcaseSection(),
                     ),
+
+                    // Section 7: Practical Benefits
                     KeyedSubtree(
-                      key: _faqKey,
-                      child: const LandingFaqSection(),
+                      key: _benefitsKey,
+                      child: const LandingBenefitsSection(),
                     ),
+
+                    // Core MVP Features
+                    KeyedSubtree(
+                      key: _featuresKey,
+                      child: const LandingFeaturesSection(),
+                    ),
+
+                    // Section 8: Final CTA
                     const LandingCtaBanner(),
+
+                    // Section 9: Footer
                     LandingFooter(
                       onFeaturesTap: () => _scrollToKey(_featuresKey),
                       onHowItWorksTap: () => _scrollToKey(_howItWorksKey),
-                      onPersonasTap: () => _scrollToKey(_personasKey),
-                      onTestimonialsTap: () => _scrollToKey(_testimonialsKey),
-                      onFaqTap: () => _scrollToKey(_faqKey),
+                      onUseCasesTap: () => _scrollToKey(_useCasesKey),
+                      onShowcaseTap: () => _scrollToKey(_showcaseKey),
+                      onBenefitsTap: () => _scrollToKey(_benefitsKey),
                     ),
                   ],
                 ),
