@@ -7,17 +7,17 @@ import 'package:go_router/go_router.dart';
 class LandingNavbar extends StatelessWidget {
   final VoidCallback onFeaturesTap;
   final VoidCallback onHowItWorksTap;
-  final VoidCallback onPersonasTap;
-  final VoidCallback onTestimonialsTap;
-  final VoidCallback onFaqTap;
+  final VoidCallback onUseCasesTap;
+  final VoidCallback onShowcaseTap;
+  final VoidCallback onBenefitsTap;
 
   const LandingNavbar({
     super.key,
     required this.onFeaturesTap,
     required this.onHowItWorksTap,
-    required this.onPersonasTap,
-    required this.onTestimonialsTap,
-    required this.onFaqTap,
+    required this.onUseCasesTap,
+    required this.onShowcaseTap,
+    required this.onBenefitsTap,
   });
 
   @override
@@ -28,120 +28,96 @@ class LandingNavbar extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
-        border: Border(
-          bottom: BorderSide(
-            color: const Color(0xFF0F172A).withValues(alpha: 0.08),
-          ),
+        color: Colors.white,
+        border: const Border(
+          bottom: BorderSide(color: Color(0xFFE2E8F0), width: 1),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            offset: const Offset(0, 2),
+            blurRadius: 6,
+          ),
+        ],
       ),
       child: ResponsiveContainer(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        maxWidth: 1100,
+        padding: EdgeInsets.symmetric(
+          horizontal: context.isMobile ? 16 : 32,
+          vertical: 14,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // Brand Logo & Title
             InkWell(
-              onTap: () {},
+              onTap: () => context.go('/landing'),
               borderRadius: BorderRadius.circular(8),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    width: 38,
-                    height: 38,
+                    width: 32,
+                    height: 32,
                     decoration: BoxDecoration(
                       color: const Color(0xFF0F172A),
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFF0F172A).withValues(alpha: 0.2),
-                          blurRadius: 8,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    padding: const EdgeInsets.all(7),
+                    padding: const EdgeInsets.all(5),
                     child: Image.asset(
                       'assets/images/Claritask_ai_logo-removebg-preview.png',
-                      color: Colors.white,
                       fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) => const Icon(
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(
                         Icons.auto_awesome,
                         color: Colors.white,
-                        size: 20,
+                        size: 16,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  Row(
-                    children: [
-                      const Text(
-                        'ClariTask',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
-                          color: Color(0xFF0F172A),
-                          letterSpacing: -0.5,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF10B981).withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(
-                            color: const Color(0xFF10B981).withValues(alpha: 0.3),
-                          ),
-                        ),
-                        child: const Text(
-                          'AI',
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w800,
-                            color: Color(0xFF059669),
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ),
-                    ],
+                  const SizedBox(width: 10),
+                  const Text(
+                    'ClariTaskAI',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF0F172A),
+                      letterSpacing: -0.5,
+                    ),
                   ),
                 ],
               ),
             ),
 
-            // Desktop Nav Links
+            // Desktop Navigation Links (Section 1 of Brief)
             if (context.isWide)
               Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   _NavButton(title: 'Features', onTap: onFeaturesTap),
                   _NavButton(title: 'How It Works', onTap: onHowItWorksTap),
-                  _NavButton(title: 'Personas', onTap: onPersonasTap),
-                  _NavButton(title: 'Testimonials', onTap: onTestimonialsTap),
-                  _NavButton(title: 'FAQ', onTap: onFaqTap),
+                  _NavButton(title: 'Use Cases', onTap: onUseCasesTap),
+                  _NavButton(title: 'Showcase', onTap: onShowcaseTap),
+                  _NavButton(title: 'Benefits', onTap: onBenefitsTap),
                 ],
               ),
 
-            // Auth / Dashboard Actions
+            // Auth Actions & Mobile Menu
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (isAuthenticated) ...[
                   ElevatedButton.icon(
                     onPressed: () => context.go('/home'),
-                    icon: const Icon(Icons.dashboard_rounded, size: 18),
-                    label: const Text('Go to Dashboard'),
+                    icon: const Icon(Icons.dashboard_rounded, size: 16),
+                    label: const Text('Dashboard'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF0F172A),
                       foregroundColor: Colors.white,
                       minimumSize: Size.zero,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 18,
-                        vertical: 12,
+                        horizontal: 16,
+                        vertical: 10,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -155,8 +131,8 @@ class LandingNavbar extends StatelessWidget {
                       style: TextButton.styleFrom(
                         foregroundColor: const Color(0xFF334155),
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
+                          horizontal: 14,
+                          vertical: 10,
                         ),
                         textStyle: const TextStyle(
                           fontSize: 14,
@@ -173,8 +149,8 @@ class LandingNavbar extends StatelessWidget {
                       foregroundColor: Colors.white,
                       minimumSize: Size.zero,
                       padding: EdgeInsets.symmetric(
-                        horizontal: context.isMobile ? 14 : 20,
-                        vertical: 12,
+                        horizontal: context.isMobile ? 14 : 18,
+                        vertical: 10,
                       ),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
@@ -185,14 +161,14 @@ class LandingNavbar extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          context.isMobile ? 'Open App' : 'Get Started Free',
+                          context.isMobile ? 'Open App' : 'Get Started',
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(width: 6),
-                        const Icon(Icons.arrow_forward_rounded, size: 16),
+                        const Icon(Icons.arrow_forward_rounded, size: 14),
                       ],
                     ),
                   ),
@@ -226,9 +202,7 @@ class LandingNavbar extends StatelessWidget {
         final screenHeight = MediaQuery.sizeOf(sheetContext).height;
         return SafeArea(
           child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: screenHeight * 0.85,
-            ),
+            constraints: BoxConstraints(maxHeight: screenHeight * 0.85),
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
               child: Column(
@@ -254,7 +228,7 @@ class LandingNavbar extends StatelessWidget {
                   ),
                   const Divider(),
                   ListTile(
-                    leading: const Icon(Icons.star_outline_rounded),
+                    leading: const Icon(Icons.auto_awesome_outlined),
                     title: const Text('Features'),
                     onTap: () {
                       Navigator.of(sheetContext).pop();
@@ -271,26 +245,26 @@ class LandingNavbar extends StatelessWidget {
                   ),
                   ListTile(
                     leading: const Icon(Icons.people_outline_rounded),
-                    title: const Text('Personas'),
+                    title: const Text('Use Cases'),
                     onTap: () {
                       Navigator.of(sheetContext).pop();
-                      onPersonasTap();
+                      onUseCasesTap();
                     },
                   ),
                   ListTile(
-                    leading: const Icon(Icons.format_quote_rounded),
-                    title: const Text('Testimonials'),
+                    leading: const Icon(Icons.laptop_chromebook_rounded),
+                    title: const Text('Product Showcase'),
                     onTap: () {
                       Navigator.of(sheetContext).pop();
-                      onTestimonialsTap();
+                      onShowcaseTap();
                     },
                   ),
                   ListTile(
-                    leading: const Icon(Icons.help_outline_rounded),
-                    title: const Text('FAQ'),
+                    leading: const Icon(Icons.task_alt_rounded),
+                    title: const Text('Practical Benefits'),
                     onTap: () {
                       Navigator.of(sheetContext).pop();
-                      onFaqTap();
+                      onBenefitsTap();
                     },
                   ),
                   const SizedBox(height: 16),
@@ -338,7 +312,7 @@ class LandingNavbar extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text('Get Started Free'),
+                      child: const Text('Get Started'),
                     ),
                   ],
                 ],
@@ -360,15 +334,14 @@ class _NavButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: TextButton(
         onPressed: onTap,
         style: TextButton.styleFrom(
           foregroundColor: const Color(0xFF475569),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           textStyle: const TextStyle(
             fontSize: 14,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
           ),
         ),
         child: Text(title),

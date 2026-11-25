@@ -1,8 +1,6 @@
 import 'package:claritask_ai/app/router.dart';
 import 'package:claritask_ai/app/theme/app_theme.dart';
 import 'package:claritask_ai/features/authentication/presentation/cubit/auth_cubit.dart';
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -29,8 +27,6 @@ class _MyAppState extends State<MyApp> {
       title: 'ClariTask AI',
       debugShowCheckedModeBanner: false,
       routerConfig: _router,
-      locale: kIsWeb ? null : DevicePreview.locale(context),
-      builder: kIsWeb ? null : DevicePreview.appBuilder,
       theme: AppTheme.light,
       darkTheme: ThemeData.dark(),
       themeMode: ThemeMode.light,
