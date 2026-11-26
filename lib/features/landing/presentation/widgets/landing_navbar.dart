@@ -1,7 +1,6 @@
-import 'package:claritask_ai/features/authentication/presentation/cubit/auth_cubit.dart';
+import 'package:claritask_ai/features/landing/presentation/widgets/landing_store_buttons.dart';
 import 'package:claritask_ai/shared/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class LandingNavbar extends StatelessWidget {
@@ -10,6 +9,7 @@ class LandingNavbar extends StatelessWidget {
   final VoidCallback onUseCasesTap;
   final VoidCallback onShowcaseTap;
   final VoidCallback onBenefitsTap;
+  final VoidCallback onJoinWaitlistTap;
 
   const LandingNavbar({
     super.key,
@@ -18,13 +18,11 @@ class LandingNavbar extends StatelessWidget {
     required this.onUseCasesTap,
     required this.onShowcaseTap,
     required this.onBenefitsTap,
+    required this.onJoinWaitlistTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final authState = context.watch<AuthCubit>().state;
-    final isAuthenticated = authState is AuthAuthenticated;
-
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -89,7 +87,7 @@ class LandingNavbar extends StatelessWidget {
               ),
             ),
 
-            // Desktop Navigation Links (Section 1 of Brief)
+            // Desktop Navigation Links
             if (context.isWide)
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -102,84 +100,41 @@ class LandingNavbar extends StatelessWidget {
                 ],
               ),
 
-            // Auth Actions & Mobile Menu
+            // Waitlist Action & Mobile Menu Toggle
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (isAuthenticated) ...[
-                  ElevatedButton.icon(
-                    onPressed: () => context.go('/home'),
-                    icon: const Icon(Icons.dashboard_rounded, size: 16),
-                    label: const Text('Dashboard'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0F172A),
-                      foregroundColor: Colors.white,
-                      minimumSize: Size.zero,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 10,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                ElevatedButton.icon(
+                  onPressed: onJoinWaitlistTap,
+                  icon: const Icon(Icons.mail_outline_rounded, size: 16),
+                  label: Text(
+                    context.isMobile ? 'Waitlist' : 'Join Waitlist',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                ] else ...[
-                  if (context.isWide)
-                    TextButton(
-                      onPressed: () => context.push('/auth'),
-                      style: TextButton.styleFrom(
-                        foregroundColor: const Color(0xFF334155),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 10,
-                        ),
-                        textStyle: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      child: const Text('Sign In'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0F172A),
+                    foregroundColor: Colors.white,
+                    minimumSize: Size.zero,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.isMobile ? 14 : 18,
+                      vertical: 10,
                     ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: () => context.push('/auth'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0F172A),
-                      foregroundColor: Colors.white,
-                      minimumSize: Size.zero,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: context.isMobile ? 14 : 18,
-                        vertical: 10,
-                      ),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          context.isMobile ? 'Open App' : 'Get Started',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        const Icon(Icons.arrow_forward_rounded, size: 14),
-                      ],
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                ],
+                ),
 
                 // Mobile Menu Toggle
                 if (!context.isWide) ...[
                   const SizedBox(width: 8),
                   IconButton(
                     icon: const Icon(Icons.menu_rounded, color: Color(0xFF0F172A)),
-                    onPressed: () => _showMobileMenu(context, isAuthenticated),
+                    onPressed: () => _showMobileMenu(context),
                   ),
                 ],
               ],
@@ -190,7 +145,7 @@ class LandingNavbar extends StatelessWidget {
     );
   }
 
-  void _showMobileMenu(BuildContext context, bool isAuthenticated) {
+  void _showMobileMenu(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -267,54 +222,41 @@ class LandingNavbar extends StatelessWidget {
                       onBenefitsTap();
                     },
                   ),
-                  const SizedBox(height: 16),
-                  if (isAuthenticated)
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(sheetContext).pop();
-                        context.go('/home');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0F172A),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                  const SizedBox(height: 20),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.of(sheetContext).pop();
+                      onJoinWaitlistTap();
+                    },
+                    icon: const Icon(Icons.mail_outline_rounded, size: 18),
+                    label: const Text('Join the Waitlist'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF0F172A),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Text('Go to Dashboard'),
-                    )
-                  else ...[
-                    OutlinedButton(
-                      onPressed: () {
-                        Navigator.of(sheetContext).pop();
-                        context.push('/auth');
-                      },
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: const Text('Sign In'),
                     ),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(sheetContext).pop();
-                        context.push('/auth');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0F172A),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Center(
+                    child: Text(
+                      'Mobile App Coming Soon',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF64748B),
                       ),
-                      child: const Text('Get Started'),
                     ),
-                  ],
+                  ),
+                  const SizedBox(height: 12),
+                  LandingStoreButtons(
+                    onNotifyMeTap: () {
+                      Navigator.of(sheetContext).pop();
+                      onJoinWaitlistTap();
+                    },
+                  ),
                 ],
               ),
             ),

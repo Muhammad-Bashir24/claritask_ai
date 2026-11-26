@@ -8,6 +8,7 @@ import 'package:claritask_ai/features/landing/presentation/widgets/landing_navba
 import 'package:claritask_ai/features/landing/presentation/widgets/landing_problem_solution_section.dart';
 import 'package:claritask_ai/features/landing/presentation/widgets/landing_showcase_section.dart';
 import 'package:claritask_ai/features/landing/presentation/widgets/landing_use_cases_section.dart';
+import 'package:claritask_ai/features/landing/presentation/widgets/landing_waitlist_modal.dart';
 import 'package:flutter/material.dart';
 
 class LandingScreen extends StatefulWidget {
@@ -35,6 +36,10 @@ class _LandingScreenState extends State<LandingScreen> {
     }
   }
 
+  void _openWaitlistDialog() {
+    showWaitlistDialog(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,9 +54,10 @@ class _LandingScreenState extends State<LandingScreen> {
               onUseCasesTap: () => _scrollToKey(_useCasesKey),
               onShowcaseTap: () => _scrollToKey(_showcaseKey),
               onBenefitsTap: () => _scrollToKey(_benefitsKey),
+              onJoinWaitlistTap: _openWaitlistDialog,
             ),
 
-            // Scrollable Content (Sections 2 through 9)
+            // Scrollable Content
             Expanded(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -60,6 +66,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     // Section 2: Hero
                     LandingHeroSection(
                       onSeeHowItWorksTap: () => _scrollToKey(_howItWorksKey),
+                      onJoinWaitlistTap: _openWaitlistDialog,
                     ),
 
                     // Section 3: Problem and Solution
@@ -95,8 +102,10 @@ class _LandingScreenState extends State<LandingScreen> {
                       child: const LandingFeaturesSection(),
                     ),
 
-                    // Section 8: Final CTA
-                    const LandingCtaBanner(),
+                    // Section 8: Final CTA Banner
+                    LandingCtaBanner(
+                      onJoinWaitlistTap: _openWaitlistDialog,
+                    ),
 
                     // Section 9: Footer
                     LandingFooter(
@@ -105,6 +114,7 @@ class _LandingScreenState extends State<LandingScreen> {
                       onUseCasesTap: () => _scrollToKey(_useCasesKey),
                       onShowcaseTap: () => _scrollToKey(_showcaseKey),
                       onBenefitsTap: () => _scrollToKey(_benefitsKey),
+                      onJoinWaitlistTap: _openWaitlistDialog,
                     ),
                   ],
                 ),

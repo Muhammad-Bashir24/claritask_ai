@@ -7,6 +7,7 @@ class LandingFooter extends StatelessWidget {
   final VoidCallback onUseCasesTap;
   final VoidCallback onShowcaseTap;
   final VoidCallback onBenefitsTap;
+  final VoidCallback onJoinWaitlistTap;
 
   const LandingFooter({
     super.key,
@@ -15,6 +16,7 @@ class LandingFooter extends StatelessWidget {
     required this.onUseCasesTap,
     required this.onShowcaseTap,
     required this.onBenefitsTap,
+    required this.onJoinWaitlistTap,
   });
 
   void _showPolicyDialog(BuildContext context, String title, String body) {
@@ -95,13 +97,41 @@ class LandingFooter extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 14),
-                      // Exact Brand Messaging from Brief Section 7 & 14
                       const Text(
                         'ClariTaskAI turns the things you need to get done into simple steps you can actually take. Work through them. Get things done.',
                         style: TextStyle(
                           fontSize: 13,
                           color: Color(0xFF94A3B8),
                           height: 1.55,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF1E293B),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: const Color(0xFF334155)),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.apple, size: 14, color: Colors.white),
+                            SizedBox(width: 6),
+                            Icon(Icons.play_arrow_rounded, size: 14, color: Colors.white),
+                            SizedBox(width: 8),
+                            Text(
+                              'iOS & Android Coming Soon',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFFCBD5E1),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -131,6 +161,10 @@ class LandingFooter extends StatelessWidget {
                         _FooterLink(title: 'Use Cases', onTap: onUseCasesTap),
                         _FooterLink(title: 'Product Showcase', onTap: onShowcaseTap),
                         _FooterLink(title: 'Benefits', onTap: onBenefitsTap),
+                        _FooterLink(
+                          title: 'Join Waitlist',
+                          onTap: onJoinWaitlistTap,
+                        ),
                       ],
                     ),
                   ),
@@ -200,6 +234,7 @@ class LandingFooter extends StatelessWidget {
                   _FooterLink(title: 'Use Cases', onTap: onUseCasesTap),
                   _FooterLink(title: 'Showcase', onTap: onShowcaseTap),
                   _FooterLink(title: 'Benefits', onTap: onBenefitsTap),
+                  _FooterLink(title: 'Join Waitlist', onTap: onJoinWaitlistTap),
                   _FooterLink(
                     title: 'Privacy',
                     onTap: () => _showPolicyDialog(
@@ -236,7 +271,7 @@ class LandingFooter extends StatelessWidget {
                   ),
                 ),
                 const Text(
-                  'Turn any task into simple steps.',
+                  'Early Access Waitlist Open',
                   style: TextStyle(
                     fontSize: 12,
                     color: Color(0xFF64748B),
